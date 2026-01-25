@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald",
+    "imageUrl": "https://covers.openlibrary.org/b/id/12364437-M.jpg",
+    "year": 1925
+  },
+  {
+    "id": 2,
+    "title": "Brave New World",
+    "author": "Aldous Huxley",
+    "imageUrl": "https://covers.openlibrary.org/b/id/14922539-M.jpg",
+    "year": 1932
+  },
+  {
+    "id": 3,
+    "title": "The Hobbit",
+    "author": "J.R.R. Tolkien",
+    "imageUrl": "https://covers.openlibrary.org/b/id/14627222-M.jpg",
+    "year": 1937
+  }
+]
