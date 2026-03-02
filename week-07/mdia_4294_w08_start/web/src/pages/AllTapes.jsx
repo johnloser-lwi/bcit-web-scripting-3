@@ -1,16 +1,21 @@
 import TapeFilters from '../components/TapesFilter';
 import { useState, useEffect } from 'react';
+import AddAlbumModal from '../components/AddTapeModal';
 
 function AllTapes() {
 
     const [albums, setAlbums] = useState([]);
 
-    useEffect(() => {
+    const getAllAlbums = () => {
         fetch("http://localhost:3000/albums")
             .then(res => res.json())
             .then(data => {
                 setAlbums(data);
-            });
+        });
+    }
+
+    useEffect(() => {
+        getAllAlbums();
     }, []);
 
     return (
@@ -20,6 +25,7 @@ function AllTapes() {
                 <div className='col-3'>
                     <h3>Filters</h3>
                     <TapeFilters />
+                    <AddAlbumModal onAlbumAdded={getAllAlbums}/>
                 </div>
                 <div className='col-9'>
                     <h3>My Collection</h3>
@@ -28,9 +34,9 @@ function AllTapes() {
                             return (
                                 <div key={album.div} 
                                 className='col-4 flex flex-grow'>
-                                    <img src={album.image_name} alt="Placeholder" />
+                                    <img src={"http://localhost:3000/images/" + album.image_name} alt="Placeholder" />
                                     <div className='card-content'>
-                                        <h4>{album.name}</h4>
+                                        <h4>{album.title}</h4>
                                         <p>{album.artist}</p>
                                     </div>    
                                 </div>
