@@ -1,6 +1,3 @@
-// Main Express server entry point for the Video Games Collection API
-// Sets up all middleware and mounts the games and genres routers
-
 const express = require('express');
 const cors = require('cors');
 const gamesRouter = require('./routers/games');
@@ -9,20 +6,18 @@ const genresRouter = require('./routers/genres');
 const app = express();
 const PORT = 3000;
 
-// Serve the public/ folder as static files so the React app can load
-// uploaded cover images via http://localhost:3000/images/<filename>
+// register the static assets
 app.use(express.static('public'));
-
-// Allow cross-origin requests from the React dev server (running on port 5173)
+// allow react app to talk to the server without being blocked by the browser
 app.use(cors());
-
-// Parse incoming JSON request bodies — needed for JSON-encoded PUT/POST bodies
+// use express.json to simplify the parsing of json data
 app.use(express.json());
 
-// Mount the routers: all /games routes go to gamesRouter, /genres to genresRouter
+// register the 2 routers created
 app.use('/games', gamesRouter);
 app.use('/genres', genresRouter);
 
+// start the server
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });

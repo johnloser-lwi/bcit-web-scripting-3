@@ -1,12 +1,6 @@
-// GameCard component — a clickable card displayed in the AllGames grid
-// Shows the game's cover image, title, developer, genre, and release year
-// Clicking the card triggers the onGameClick callback in AllGames to navigate
-// to the SingleGame detail view
-
 function GameCard({ game, onClick }) {
   return (
     <div className="card game-card" onClick={onClick}>
-      {/* Cover image area — shows a placeholder text if no image has been uploaded */}
       <div className="card__image">
         {game.cover_image ? (
           <img
@@ -18,7 +12,6 @@ function GameCard({ game, onClick }) {
         )}
       </div>
 
-      {/* Text info below the image */}
       <div className="card-content">
         <h4>{game.title}</h4>
         <p>{game.developer}</p>

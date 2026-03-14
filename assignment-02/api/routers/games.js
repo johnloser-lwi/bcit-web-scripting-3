@@ -1,32 +1,34 @@
-// Games router — handles all CRUD routes for /games
-// Uses a JOIN so every response includes the genre name alongside the genre_id
-
 const express = require('express');
 const gamesRouter = express.Router();
 const db = require('../db');
 const upload = require('../storage');
 
-// GET /games — returns all games joined with their genre name
-// Accepts an optional ?genre_id= query parameter to filter results by genre
+// get games
 gamesRouter.get('/', (req, res) => {
+  // parse the url to get the genre_id: http://localhost:3000/games?genre_id=${selectedGenreId}
   const { genre_id } = req.query;
 
-  // Base SQL joins games with genres so we get the genre name in the response
+  // display the genre with its name instead of id by joining the tables
   let sql = `
     SELECT games.*, genres.name AS genre
     FROM games
     JOIN genres ON games.genre_id = genres.id
   `;
+
+  // extract the params here so we can dynamically add the value into the query list
   const params = [];
 
-  // Append a WHERE clause only when the client wants a specific genre
+  // if there's genre_id in the url add the genere id query to the sql
+  // ? is a placeholder which will be replaced by the values in the params
   if (genre_id) {
     sql += ' WHERE games.genre_id = ?';
     params.push(genre_id);
   }
 
+  // order by title
   sql += ' ORDER BY games.title';
 
+  // run the sql, add params to replace ? in the sql string
   db.query(sql, params, (err, results) => {
     if (err) {
       console.error('Error fetching games:', err);
@@ -36,10 +38,11 @@ gamesRouter.get('/', (req, res) => {
   });
 });
 
-// GET /games/:id — returns a single game by its primary key, with genre name
+// get game by id, used for display individual title
 gamesRouter.get('/:id', (req, res) => {
   const { id } = req.params;
 
+  // display genre name instead of id
   const sql = `
     SELECT games.*, genres.name AS genre
     FROM games
@@ -47,6 +50,7 @@ gamesRouter.get('/:id', (req, res) => {
     WHERE games.id = ?
   `;
 
+  // replace ? in the sql with id parsed from the params
   db.query(sql, [id], (err, results) => {
     if (err) {
       console.error('Error fetching game:', err);
@@ -55,18 +59,18 @@ gamesRouter.get('/:id', (req, res) => {
     if (results.length === 0) {
       return res.status(404).json({ error: 'Game not found' });
     }
-    // Return the first (and only) row as a single object instead of an array
+
+    // get the first result from the list (there can only be 1 result)
     res.json(results[0]);
   });
 });
 
-// POST /games — creates a new game record
-// upload.single('cover_image') processes the uploaded file before the handler runs
-// The uploaded file's generated filename is available on req.file
+
+// add game
 gamesRouter.post('/', upload.single('cover_image'), (req, res) => {
   const { title, developer, release_year, description, genre_id } = req.body;
 
-  // If a file was uploaded, use its stored filename; otherwise leave cover_image null
+  // if there's a file in the request, use filename, otherwise set it to null
   const cover_image = req.file ? req.file.filename : null;
 
   const sql = `
@@ -83,14 +87,13 @@ gamesRouter.post('/', upload.single('cover_image'), (req, res) => {
   });
 });
 
-// PUT /games/:id — updates an existing game
-// Image upload is optional: if no new file is sent, the existing cover_image is kept
+// change game info
 gamesRouter.put('/:id', upload.single('cover_image'), (req, res) => {
   const { id } = req.params;
   const { title, developer, release_year, description, genre_id } = req.body;
 
+  // if there's a file, handle file upload
   if (req.file) {
-    // A new image was uploaded — include cover_image in the UPDATE
     const cover_image = req.file.filename;
     const sql = `
       UPDATE games
@@ -105,7 +108,6 @@ gamesRouter.put('/:id', upload.single('cover_image'), (req, res) => {
       res.json({ message: 'Game updated successfully' });
     });
   } else {
-    // No new image — update all fields except cover_image so the old one is preserved
     const sql = `
       UPDATE games
       SET title = ?, developer = ?, release_year = ?, description = ?, genre_id = ?
@@ -121,10 +123,9 @@ gamesRouter.put('/:id', upload.single('cover_image'), (req, res) => {
   }
 });
 
-// DELETE /games/:id — permanently removes a game from the database by its id
+// delete game from database
 gamesRouter.delete('/:id', (req, res) => {
   const { id } = req.params;
-
   const sql = 'DELETE FROM games WHERE id = ?';
 
   db.query(sql, [id], (err) => {

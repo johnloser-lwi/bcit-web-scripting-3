@@ -1,23 +1,18 @@
-// Multer storage configuration for handling cover image file uploads
-// Multer is middleware that processes multipart/form-data (files)
-
 const multer = require('multer');
 
-// diskStorage lets us control where files are saved and what they are named
+// create the storage instance
 const storage = multer.diskStorage({
-  // destination tells multer which folder to save uploaded files into
+  // where the file is stored
   destination: (req, file, cb) => {
     cb(null, 'public/images');
   },
-
-  // filename builds a unique name using the current timestamp + original filename
-  // Date.now() prevents collisions when two users upload files with the same name
+  // define the formatting of file name {date}-{file_name}
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname.replace(/\s+/g, '_'));
   }
 });
 
-// Create the multer upload middleware using our custom storage config
+// create the multer instance using storage instance as storage
 const upload = multer({ storage: storage });
 
 module.exports = upload;

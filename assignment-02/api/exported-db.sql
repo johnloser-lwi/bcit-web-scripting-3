@@ -1,21 +1,12 @@
--- Video Games Collection Database
--- Database name uses initials: jd_games
--- Run this file to recreate the database from scratch
-
 DROP DATABASE IF EXISTS jd_games;
 CREATE DATABASE jd_games;
 USE jd_games;
 
--- genres is a secondary/lookup table that stores game genre categories
--- games will reference this table via a foreign key
 CREATE TABLE genres (
     id   INT          PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL
 );
 
--- games is the main table storing all the video game data
--- cover_image stores just the filename of the uploaded image (not the full path)
--- genre_id links each game to a row in the genres table
 CREATE TABLE games (
     id           INT          PRIMARY KEY AUTO_INCREMENT,
     title        VARCHAR(255) NOT NULL,
@@ -27,7 +18,6 @@ CREATE TABLE games (
     FOREIGN KEY (genre_id) REFERENCES genres(id)
 );
 
--- Seed the genres lookup table with common video game categories
 INSERT INTO genres (name) VALUES
     ('Action-Adventure'),
     ('FPS'),
@@ -38,8 +28,6 @@ INSERT INTO genres (name) VALUES
     ('Sports'),
     ('Strategy');
 
--- Seed sample games so there is data to display on first run
--- cover_image is NULL for seeded data since no file has been uploaded
 INSERT INTO games (title, developer, release_year, description, cover_image, genre_id) VALUES
     ('The Legend of Zelda: Breath of the Wild', 'Nintendo', 2017,
      'An open-world action-adventure set in the ruins of Hyrule. Players explore freely, solve shrines, and defeat Calamity Ganon.',

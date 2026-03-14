@@ -1,32 +1,23 @@
-// AddGameForm component — a modal form for adding a new game to the collection
-// Uses createPortal to render the modal directly on document.body so it floats
-// above the rest of the page regardless of where in the tree it is used
-// Submits data as FormData (multipart/form-data) to support cover image uploads
-
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 function AddGameForm({ onClose, onGameAdded }) {
-  // One state variable per form field
+  // all the states needed for user input
   const [title, setTitle] = useState('');
   const [developer, setDeveloper] = useState('');
   const [releaseYear, setReleaseYear] = useState('');
   const [description, setDescription] = useState('');
   const [genreId, setGenreId] = useState('');
-  const [coverImage, setCoverImage] = useState(null); // the selected File object
-
-  // genres is fetched from the API to populate the genre <select>
+  const [coverImage, setCoverImage] = useState(null);
   const [genres, setGenres] = useState([]);
 
-  // Fetch the genre list once when this form first renders
+  // get all genres available
   useEffect(() => {
     fetch('http://localhost:3000/genres')
       .then(res => res.json())
       .then(data => setGenres(data));
   }, []);
 
-  // handleSubmit builds a FormData object and POSTs it to the API
-  // FormData is required instead of JSON because we are uploading a file
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -36,7 +27,6 @@ function AddGameForm({ onClose, onGameAdded }) {
     formData.append('release_year', releaseYear);
     formData.append('description', description);
     formData.append('genre_id', genreId);
-    // Only append the image field if the user actually selected a file
     if (coverImage) {
       formData.append('cover_image', coverImage);
     }
@@ -44,18 +34,14 @@ function AddGameForm({ onClose, onGameAdded }) {
     const response = await fetch('http://localhost:3000/games', {
       method: 'POST',
       body: formData,
-      // Do NOT set Content-Type manually — the browser sets it automatically
-      // with the correct multipart boundary when using FormData
     });
 
     const result = await response.json();
     console.log('Add game result:', result);
 
-    // Tell the parent (AllGames) to refresh the game list and close this modal
     onGameAdded();
   };
 
-  // Render the modal into document.body using a portal
   return createPortal(
     <div className="modal-overlay">
       <div className="modal card">
@@ -132,7 +118,6 @@ function AddGameForm({ onClose, onGameAdded }) {
           </div>
         </form>
 
-        {/* Close button in the top-right corner of the modal */}
         <button className="modal__close" type="button" onClick={onClose}>
           X
         </button>

@@ -1,43 +1,32 @@
-// EditGameForm component — a modal form for editing an existing game
-// Pre-populated with the game's current data passed in via the game prop
-// Cover image upload is optional: if no new file is chosen, the existing image is kept
-// Submits as FormData so multer on the server can handle the optional file upload
-
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 function EditGameForm({ game, onClose, onGameUpdated }) {
-  // Initialise each field with the existing game's current values
+  // all the inputs availble for user
   const [title, setTitle] = useState(game.title);
   const [developer, setDeveloper] = useState(game.developer);
   const [releaseYear, setReleaseYear] = useState(game.release_year);
   const [description, setDescription] = useState(game.description || '');
   const [genreId, setGenreId] = useState(game.genre_id);
-  // coverImage starts as null — null means "keep the existing image"
   const [coverImage, setCoverImage] = useState(null);
-
-  // genres is fetched to populate the genre dropdown
   const [genres, setGenres] = useState([]);
 
+  // fetch available genres
   useEffect(() => {
     fetch('http://localhost:3000/genres')
       .then(res => res.json())
       .then(data => setGenres(data));
   }, []);
 
-  // handleSubmit sends the updated fields to the PUT /games/:id endpoint
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Build FormData — the server uses multer which requires multipart/form-data
     const formData = new FormData();
     formData.append('title', title);
     formData.append('developer', developer);
     formData.append('release_year', releaseYear);
     formData.append('description', description);
     formData.append('genre_id', genreId);
-    // Only include a new file if the user actually chose one
-    // The server router handles both cases: new image vs. no new image
     if (coverImage) {
       formData.append('cover_image', coverImage);
     }
@@ -50,7 +39,6 @@ function EditGameForm({ game, onClose, onGameUpdated }) {
     const result = await response.json();
     console.log('Edit game result:', result);
 
-    // Tell the parent (SingleGame) to refresh the displayed game data
     onGameUpdated();
   };
 
@@ -119,7 +107,6 @@ function EditGameForm({ game, onClose, onGameUpdated }) {
             accept="image/*"
             onChange={e => setCoverImage(e.target.files[0])}
           />
-          {/* Show the current filename so the user knows what image is saved */}
           {game.cover_image && (
             <p>Current image: {game.cover_image}</p>
           )}

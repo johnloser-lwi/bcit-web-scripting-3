@@ -1,11 +1,6 @@
-// Database connection module
-// Creates a single MySQL connection and exports it so every router
-// can share the same connection without reconnecting each time
-
 const mysql = require('mysql2');
 
-// Connect to the local MySQL database (standard port 3306)
-// Change user/password if your MySQL credentials are different
+// create a database instance, the default port for mysql server on my PC is 3306
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -14,8 +9,9 @@ const db = mysql.createConnection({
   port: 3306
 });
 
-// Log a success message once connected, or print the error if connection fails
+// connect to the database
 db.connect(err => {
+  // if there's an error, log it
   if (err) {
     console.error('Error connecting to the database:', err);
     return;
@@ -23,4 +19,5 @@ db.connect(err => {
   console.log('Connected to the jd_games database!');
 });
 
+// export the db for other scripts to access
 module.exports = db;
