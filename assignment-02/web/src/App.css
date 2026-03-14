@@ -1,25 +1,74 @@
 /* ============================================================
-   Global Styles — Video Games Collection App
-   Based on the class reference grid/card/button system
+   RGB Gaming Theme — Video Games Collection App
+   Dark background, neon cyan/magenta/purple accents, glow effects
    ============================================================ */
 
+/* ── Colour variables ─────────────────────────────────────── */
+:root {
+  --bg:         #080810;
+  --bg-card:    #0f0f1e;
+  --bg-input:   #0a0a18;
+  --cyan:       #00f0ff;
+  --magenta:    #ff00c8;
+  --purple:     #8b00ff;
+  --green:      #00ff88;
+  --text:       #d0d0f0;
+  --text-dim:   #6060a0;
+  --border:     #1e1e3e;
+}
+
+/* ── Keyframes ────────────────────────────────────────────── */
+
+/* RGB border cycling — rotates hue around the full spectrum */
+@keyframes rgb-border {
+  0%   { border-color: var(--cyan);    box-shadow: 0 0 8px var(--cyan); }
+  33%  { border-color: var(--magenta); box-shadow: 0 0 8px var(--magenta); }
+  66%  { border-color: var(--purple);  box-shadow: 0 0 8px var(--purple); }
+  100% { border-color: var(--cyan);    box-shadow: 0 0 8px var(--cyan); }
+}
+
+/* Header gradient cycling */
+@keyframes rgb-gradient {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Subtle pulsing glow on the site title */
+@keyframes glow-pulse {
+  0%, 100% { text-shadow: 0 0 8px var(--cyan), 0 0 20px var(--cyan); }
+  50%       { text-shadow: 0 0 16px var(--cyan), 0 0 40px var(--cyan), 0 0 60px var(--magenta); }
+}
+
+/* Card hover lift */
+@keyframes card-lift {
+  to { transform: translateY(-4px); }
+}
+
+/* ── Reset ────────────────────────────────────────────────── */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/* ── Base ─────────────────────────────────────────────────── */
 body {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   font-size: 1rem;
-  line-height: 1.5;
-  color: #222;
-  background-color: #f5f5f5;
+  line-height: 1.6;
+  color: var(--text);
+  background-color: var(--bg);
+  /* subtle dot-grid background for that PCB / game-board feel */
+  background-image: radial-gradient(circle, #1a1a2e 1px, transparent 1px);
+  background-size: 28px 28px;
+  min-height: 100vh;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: monospace;
+  font-family: 'Courier New', Courier, monospace;
   line-height: 1.2;
+  letter-spacing: 0.04em;
 }
 
 img {
@@ -28,25 +77,19 @@ img {
   display: block;
 }
 
-/* ============================================================
-   Layout — Container
-   ============================================================ */
-
+/* ── Layout ───────────────────────────────────────────────── */
 .container {
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
 }
 
-/* ============================================================
-   Grid System — 12-column grid matching the class reference
-   ============================================================ */
-
+/* ── Grid ─────────────────────────────────────────────────── */
 .grid-container {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .col-1  { grid-column: span 1; }
@@ -62,47 +105,64 @@ img {
 .col-11 { grid-column: span 11; }
 .col-12 { grid-column: span 12; }
 
-/* ============================================================
-   Button
-   ============================================================ */
+/* ── Header ───────────────────────────────────────────────── */
+.header {
+  background: linear-gradient(270deg, #0d0030, #001830, #0d0030, #180030);
+  background-size: 400% 400%;
+  animation: rgb-gradient 8s ease infinite;
+  border-bottom: 2px solid var(--cyan);
+  box-shadow: 0 2px 20px rgba(0, 240, 255, 0.3);
+  padding: 1.25rem 0;
+  margin-bottom: 2.5rem;
+}
 
+.header h1 {
+  font-size: 1.6rem;
+  color: var(--cyan);
+  animation: glow-pulse 3s ease-in-out infinite;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* ── Button ───────────────────────────────────────────────── */
 .button {
   all: unset;
-  font-family: monospace;
+  font-family: 'Courier New', Courier, monospace;
   display: inline-block;
-  padding: 0.35rem 0.75rem;
-  background-color: #fff;
-  color: #000;
-  border: 2px solid #000;
-  box-shadow: 3px 3px 0 0 #000;
+  padding: 0.4rem 1rem;
+  background-color: transparent;
+  color: var(--cyan);
+  border: 1px solid var(--cyan);
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.4), inset 0 0 6px rgba(0, 240, 255, 0.05);
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: background-color 0.15s, box-shadow 0.15s, color 0.15s;
 }
 
 .button:hover {
-  background-color: #000;
-  color: #fff;
+  background-color: var(--cyan);
+  color: var(--bg);
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.8), 0 0 30px rgba(0, 240, 255, 0.3);
 }
 
 .button--danger {
-  border-color: #c00;
-  box-shadow: 3px 3px 0 0 #c00;
-  color: #c00;
+  color: var(--magenta);
+  border-color: var(--magenta);
+  box-shadow: 0 0 6px rgba(255, 0, 200, 0.4), inset 0 0 6px rgba(255, 0, 200, 0.05);
 }
 
 .button--danger:hover {
-  background-color: #c00;
-  color: #fff;
+  background-color: var(--magenta);
+  color: var(--bg);
+  box-shadow: 0 0 16px rgba(255, 0, 200, 0.8), 0 0 30px rgba(255, 0, 200, 0.3);
 }
 
-/* ============================================================
-   Card
-   ============================================================ */
-
+/* ── Card ─────────────────────────────────────────────────── */
 .card {
-  background-color: #fff;
-  border: 2px solid #000;
-  box-shadow: 3px 3px 0 0 #000;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
 }
 
 .card-content {
@@ -112,79 +172,100 @@ img {
 .card-content > *:first-child { margin-top: 0; }
 .card-content > *:last-child  { margin-bottom: 0; }
 
-/* ============================================================
-   Header
-   ============================================================ */
-
-.header {
-  background-color: #111;
-  color: #fff;
-  border-bottom: 3px solid #000;
-  margin-bottom: 2rem;
-  padding: 1rem 0;
-}
-
-.header h1 {
-  font-size: 1.5rem;
-  color: #fff;
-}
-
-/* ============================================================
-   Page header row (title + Add Game button side by side)
-   ============================================================ */
-
+/* ── Page header row ──────────────────────────────────────── */
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
 }
 
-/* ============================================================
-   Genre Filter Sidebar
-   ============================================================ */
+.page-header h2 {
+  font-size: 1.3rem;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
 
+/* ── Genre Filter Sidebar ─────────────────────────────────── */
 .genre-filter h3 {
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--magenta);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.6rem;
+  text-shadow: 0 0 8px rgba(255, 0, 200, 0.5);
 }
 
 .genre-filter select {
   width: 100%;
-  padding: 0.4rem 0.5rem;
-  border: 2px solid #000;
-  font-family: monospace;
-  font-size: 0.9rem;
-  background-color: #fff;
+  padding: 0.5rem 0.6rem;
+  background-color: var(--bg-input);
+  color: var(--text);
+  border: 1px solid var(--cyan);
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.85rem;
   cursor: pointer;
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.2);
+  outline: none;
 }
 
-/* ============================================================
-   Games Grid
-   ============================================================ */
+.genre-filter select:focus {
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+}
 
+.genre-filter select option {
+  background-color: var(--bg-card);
+}
+
+/* ── Games Grid ───────────────────────────────────────────── */
 .games-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
-/* ============================================================
-   Game Card (clickable card in the listing)
-   ============================================================ */
+.games-grid > p {
+  grid-column: 1 / -1;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
 
+/* ── Game Card ────────────────────────────────────────────── */
 .game-card {
   cursor: pointer;
-  transition: transform 0.1s ease;
+  border: 1px solid var(--border);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Top-edge cyan accent line */
+.game-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--purple));
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .game-card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0 0 #000;
+  transform: translateY(-5px);
+  border-color: var(--cyan);
+  box-shadow: 0 8px 24px rgba(0, 240, 255, 0.25), 0 0 0 1px rgba(0, 240, 255, 0.1);
+}
+
+.game-card:hover::before {
+  opacity: 1;
 }
 
 .game-card .card__image {
-  background-color: #ddd;
+  background-color: #0a0a18;
   aspect-ratio: 3 / 4;
   overflow: hidden;
 }
@@ -193,62 +274,81 @@ img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.game-card:hover .card__image img {
+  transform: scale(1.04);
 }
 
 .no-image {
   width: 100%;
   height: 100%;
+  min-height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: monospace;
-  font-size: 0.8rem;
-  color: #888;
-  background-color: #e0e0e0;
-  min-height: 180px;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  background: repeating-linear-gradient(
+    45deg,
+    #0a0a18,
+    #0a0a18 8px,
+    #0d0d22 8px,
+    #0d0d22 16px
+  );
+  letter-spacing: 0.05em;
 }
 
 .game-card .card-content h4 {
-  font-size: 0.95rem;
-  margin-bottom: 0.2rem;
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .game-card .card-content p {
-  font-size: 0.8rem;
-  color: #555;
+  font-size: 0.75rem;
+  color: var(--text-dim);
   margin: 0;
 }
 
-/* ============================================================
-   Single Game Detail View
-   ============================================================ */
-
+/* ── Single Game Detail View ──────────────────────────────── */
 .single-game {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: 2rem;
+  gap: 2.5rem;
   margin-top: 1.5rem;
 }
 
 .single-game__image img {
   width: 100%;
-  border: 2px solid #000;
-  box-shadow: 4px 4px 0 0 #000;
+  border: 1px solid var(--cyan);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
 }
 
 .single-game__image .no-image {
-  min-height: 300px;
-  border: 2px solid #000;
+  min-height: 340px;
+  border: 1px solid var(--border);
 }
 
 .single-game__details h2 {
   font-size: 2rem;
-  margin-bottom: 1rem;
+  color: var(--cyan);
+  text-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+  margin-bottom: 1.25rem;
 }
 
 .single-game__details p {
   margin-bottom: 0.75rem;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.single-game__details p strong {
+  color: var(--magenta);
 }
 
 .single-game__actions {
@@ -262,18 +362,16 @@ img {
   margin-bottom: 1.5rem;
 }
 
-/* ============================================================
-   Modal Overlay
-   ============================================================ */
-
+/* ── Modal Overlay ────────────────────────────────────────── */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 8, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  backdrop-filter: blur(4px);
 }
 
 .modal {
@@ -283,11 +381,19 @@ img {
   max-height: 90vh;
   overflow-y: auto;
   padding: 2rem;
+  background-color: var(--bg-card);
+  border: 1px solid var(--cyan);
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.2), 0 0 60px rgba(139, 0, 255, 0.15);
+  animation: rgb-border 4s linear infinite;
 }
 
 .modal h3 {
-  margin-bottom: 1.25rem;
-  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
 }
 
 .modal__close {
@@ -295,33 +401,36 @@ img {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
-  font-family: monospace;
-  font-size: 0.9rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8rem;
+  color: var(--text-dim);
   cursor: pointer;
   padding: 0.2rem 0.5rem;
-  border: 1px solid #000;
+  border: 1px solid var(--border);
+  transition: color 0.15s, border-color 0.15s;
 }
 
 .modal__close:hover {
-  background-color: #000;
-  color: #fff;
+  color: var(--magenta);
+  border-color: var(--magenta);
+  box-shadow: 0 0 8px rgba(255, 0, 200, 0.4);
 }
 
-/* ============================================================
-   Form Styles (shared by AddGameForm and EditGameForm)
-   ============================================================ */
-
+/* ── Form Styles ──────────────────────────────────────────── */
 .modal form {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .modal label {
-  font-family: monospace;
-  font-size: 0.85rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.75rem;
   font-weight: bold;
-  margin-top: 0.5rem;
+  color: var(--magenta);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 0.6rem;
 }
 
 .modal input[type="text"],
@@ -329,11 +438,26 @@ img {
 .modal textarea,
 .modal select {
   width: 100%;
-  padding: 0.4rem 0.5rem;
-  border: 2px solid #000;
-  font-family: monospace;
+  padding: 0.45rem 0.6rem;
+  background-color: var(--bg-input);
+  color: var(--text);
+  border: 1px solid var(--border);
+  font-family: 'Courier New', Courier, monospace;
   font-size: 0.9rem;
-  background-color: #fff;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.modal input[type="text"]:focus,
+.modal input[type="number"]:focus,
+.modal textarea:focus,
+.modal select:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+}
+
+.modal select option {
+  background-color: var(--bg-card);
 }
 
 .modal textarea {
@@ -341,18 +465,19 @@ img {
 }
 
 .modal input[type="file"] {
-  font-family: monospace;
-  font-size: 0.85rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8rem;
+  color: var(--text-dim);
 }
 
 .modal p {
-  font-size: 0.8rem;
-  color: #555;
+  font-size: 0.75rem;
+  color: var(--text-dim);
   font-style: italic;
 }
 
 .form-actions {
   display: flex;
   gap: 0.75rem;
-  margin-top: 1rem;
+  margin-top: 1.25rem;
 }
