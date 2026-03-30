@@ -31,6 +31,7 @@ function EditGameForm({ game, onClose, onGameUpdated }) {
       formData.append('cover_image', coverImage);
     }
 
+    // include the jwt token so the api can verify the user is allowed to edit a game
     const response = await fetch(`http://localhost:3000/games/${game.id}`, {
       method: 'PUT',
       headers: {

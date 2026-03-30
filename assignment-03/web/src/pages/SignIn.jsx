@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 function SignIn({ handleLogin }) {
+    // track email and password input
     const [formData, setFormData] = useState({
         email: "",
         password: ""
@@ -9,6 +10,7 @@ function SignIn({ handleLogin }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        // send the login request to the api
         fetch("http://localhost:3000/users/signin/", {
             method: "POST",
             headers: {
@@ -21,7 +23,9 @@ function SignIn({ handleLogin }) {
         })
             .then(response => response.json())
             .then(data => {
+                // store the jwt token in localStorage so it can be sent with future requests
                 localStorage.setItem('token', data.jwt);
+                // notify the app that the user is now logged in
                 handleLogin();
             });
     };

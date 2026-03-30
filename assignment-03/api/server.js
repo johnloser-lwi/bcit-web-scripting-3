@@ -1,3 +1,4 @@
+// load environment variables from .env before anything else so JWT_SECRET is available
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');

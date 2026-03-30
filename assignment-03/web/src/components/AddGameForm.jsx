@@ -31,6 +31,7 @@ function AddGameForm({ onClose, onGameAdded }) {
       formData.append('cover_image', coverImage);
     }
 
+    // include the jwt token so the api can verify the user is allowed to add a game
     const response = await fetch('http://localhost:3000/games', {
       method: 'POST',
       headers: {

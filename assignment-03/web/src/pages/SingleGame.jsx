@@ -9,6 +9,7 @@ function SingleGame() {
   const [showEditForm, setShowEditForm] = useState(false);
 
   const fetchGame = () => {
+    // include the jwt token in the authorization header so the api allows the request
     fetch(`http://localhost:3000/games/${id}`, {
       headers: {
         Authorization: `Beaver ${localStorage.getItem("token")}`
@@ -26,6 +27,7 @@ function SingleGame() {
   const handleDelete = () => {
     if (!window.confirm(`Delete "${game.title}"? This cannot be undone.`)) return;
 
+    // include the jwt token so the api can verify the user is allowed to delete
     fetch(`http://localhost:3000/games/${id}`, {
       method: 'DELETE',
       headers: {

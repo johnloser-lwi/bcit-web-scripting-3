@@ -16,6 +16,7 @@ function AllGames() {
       ? `http://localhost:3000/games?genre_id=${selectedGenreId}`
       : 'http://localhost:3000/games';
 
+    // include the jwt token in the authorization header so the api allows the request
     fetch(url, {
       headers: {
         Authorization: `Beaver ${localStorage.getItem("token")}`

@@ -10,19 +10,24 @@ import './App.css';
 
 function App() {
   const navigate = useNavigate();
+
+  // track whether the user is logged in to control the header and route access
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  // called after a successful sign in, updates auth state and redirects to the games list
   const handleLogin = () => {
     setIsAuthenticated(true);
     navigate("/");
   };
 
+  // called when the user signs out, removes the token and redirects to sign in
   const handleLogout = () => {
     localStorage.removeItem('token');
     setIsAuthenticated(false);
     navigate("/sign-in");
   };
 
+  // on first load, check if a token already exists in localStorage to restore the logged-in state
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -30,6 +35,7 @@ function App() {
     }
   }, []);
 
+  // wrap protected pages with authRequired so unauthenticated users are redirected to sign-up
   const ProtectedAllGames = authRequired(AllGames);
   const ProtectedSingleGame = authRequired(SingleGame);
 

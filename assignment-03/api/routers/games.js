@@ -4,6 +4,7 @@ const db = require('../db');
 const upload = require('../storage');
 const authenticateToken = require('../auth');
 
+// protect all game routes, a valid jwt token is required for every request
 gamesRouter.use(authenticateToken);
 
 // get games

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 function SignUp() {
     const navigate = useNavigate();
 
+    // track all form fields in a single state object
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -13,11 +14,13 @@ function SignUp() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        // validate passwords match on the client before sending to the server
         if (formData.password !== formData.confirmPassword) {
             alert("Password do not match");
             return;
         }
 
+        // send the registration request to the api
         fetch("http://localhost:3000/users/", {
             method: "POST",
             headers: {
@@ -30,11 +33,14 @@ function SignUp() {
         })
             .then(async (response) => {
                 const data = await response.json();
+
+                // if registration failed, show the error message from the server
                 if (response.status !== 201) {
                     alert(data.message);
                     return;
                 }
 
+                // registration successful, redirect to sign in
                 navigate("/sign-in");
             });
     };
