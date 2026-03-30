@@ -10,7 +10,11 @@ function Tape() {
 
 		useEffect(() => {
 			// Fetch the tape with the id
-			fetch(`http://localhost:3000/tapes/${id}`)
+			fetch(`http://localhost:3000/tapes/${id}`, {
+			headers: {
+				Authorization: `Beaver ${localStorage.getItem("token")}`
+			}
+		})
 				.then((response) => response.json())
 				.then((data) => {
 					setTapeData(data);

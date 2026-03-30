@@ -3,6 +3,9 @@ const express = require("express");
 const tapesRouter = express.Router();
 const db = require("../db");
 const upload = require("../storage");
+const authenticateToken = require("../auth");
+
+tapesRouter.use(authenticateToken);
 
 tapesRouter.get("/", (req, res) => {
 	const sql = `
@@ -12,6 +15,26 @@ tapesRouter.get("/", (req, res) => {
     `;
 
 	db.query(sql, (err, results) => {
+		if (err) {
+			res.status(500).send(err);
+			return;
+		}
+
+		res.json(results);
+	});
+});
+
+tapesRouter.get("/my-tapes", (req, res) => {
+	const userId = req.user.userId;
+
+	const sql = `
+        SELECT albums.*, artists.name AS artist_id
+		FROM albums
+		JOIN artists ON albums.artist_id = artists.id
+		WHERE albums.user_id = ?
+    `;
+
+	db.query(sql, [userId],  (err, results) => {
 		if (err) {
 			res.status(500).send(err);
 			return;
@@ -49,11 +72,13 @@ tapesRouter.post("/", upload.single("image"), (req, res) => {
 	// The uploaded file's filename is stored in 'req.file.filename'
 	const image = req.file.filename;
 
+	const userId = req.user.userId;
+
 	// Create the SQL query to insert the new tape
-	const addAlbumSQL = `INSERT INTO albums (artist_id, name, image_name) VALUES (?, ?, ?)`;
+	const addAlbumSQL = `INSERT INTO albums (artist_id, name, image_name, user_id) VALUES (?, ?, ?, ?)`;
 
 	// Run the query above, substituting the '?' with the artist ID, title and image in that order
-	db.query(addAlbumSQL, [artist, title, image], (err, results) => {
+	db.query(addAlbumSQL, [artist, title, image, userId], (err, results) => {
 		// If an error occurred, log it and return a 500 status code
 		if (err) {
 			console.error(err);

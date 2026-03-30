@@ -5,12 +5,12 @@ import AddTapesModal from '../components/AddTapeModal';
 import UpdateTapeModal from '../components/UpdateTapeModal';
 import DeleteTapeModal from "../components/DeleteTapeModal";
 
-function AllTapes() {
+function MyTapes() {
 
     const [tapes, setTapes] = useState([]);
 
 	const getAllTapes = function() {
-		fetch("http://localhost:3000/tapes", {
+		fetch("http://localhost:3000/tapes/my-tapes", {
 			headers: {
 				Authorization: `Beaver ${localStorage.getItem("token")}`
 			}
@@ -34,7 +34,7 @@ function AllTapes() {
 						<TapeFilters />
 						{/* Add the component to the page where you want the modal button to appear */}
 						<AddTapesModal onTapeAdded={getAllTapes} />
-						<Link to="/my-tapes" className='button'>My Tpaes</Link>
+						<Link to="/tapes" className='button'>All Tpaes</Link>
 					</div>
 					<div className='col-9'>
 						<h3>My Collection</h3>
@@ -76,4 +76,4 @@ function AllTapes() {
 		);
 }
 
-export default AllTapes;
+export default MyTapes;

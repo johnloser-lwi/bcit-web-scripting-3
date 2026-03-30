@@ -15,7 +15,11 @@ function ModalForm({onClose, onTapeAdded}) {
 
 	// Load artists from the db for the form <select>
 	useEffect(() => {
-		fetch("http://localhost:3000/artists")
+		fetch("http://localhost:3000/artists", {
+			headers: {
+				Authorization: `Beaver ${localStorage.getItem("token")}`
+			}
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				setDbArtists(data);
@@ -48,6 +52,7 @@ function ModalForm({onClose, onTapeAdded}) {
                 // we need headers this time because we aren't using the formData object
 				headers: {
 					"Content-Type": "application/json",
+					"Authorization" : `Bearer ${localStorage.getItem("token")}`
 				},
 				body: JSON.stringify({ name: newArtist }),
 			});
@@ -67,6 +72,9 @@ function ModalForm({onClose, onTapeAdded}) {
 		// Send the POST request to the API to create new tape
 		const tapeResponse = await fetch("http://localhost:3000/tapes", {
 			method: "POST",
+			headers: {
+				Authorization: `Beaver ${localStorage.getItem("token")}`
+			},
 			body: formData,
 		});
 

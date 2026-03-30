@@ -1,22 +1,21 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+// import { useNavigate } from "react-router-dom";
 
 import bannerImage from '../assets/images/home-bg.jpg';
 
-function SignIn( ) {
-	const navigate = useNavigate();
-
-    const [loginSuccess, setLoginSuccess] = useState(false);
+function SignIn( {handleLogin} ) {
+	//const navigate = useNavigate();
+    //const [loginSuccess, setLoginSuccess] = useState(false);
     const [formData, setFormData] = useState({
         email: "",
         password: ""
     });
 
-    useEffect(() => {
-        if (loginSuccess) {
-            navigate("/tapes");
-        }
-    }, [loginSuccess]);
+    // useEffect(() => {
+    //     if (loginSuccess) {
+    //         navigate("/tapes");
+    //     }
+    // }, [loginSuccess]);
     
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -31,15 +30,10 @@ function SignIn( ) {
                 password: formData.password
             })
         })
-            .then(async (response) => {
-                const data = await response.json();
-                if (response.status !== 200) {
-                    alert(data.message);
-                    return;
-                }
-                localStorage.setItem("token", data.token);
-                setLoginSuccess(true);
-
+            .then(response => response.json())
+            .then(data => {
+                localStorage.setItem('token', data.jwt);
+                handleLogin();
             });
     };
 

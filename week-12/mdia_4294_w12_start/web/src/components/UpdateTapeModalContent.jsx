@@ -8,7 +8,11 @@ function UpdateTapeModalContent({ onTapeUpdated, tape, onClose }) {
 	const [image, setImage] = useState(null);
 
 	useEffect(() => {
-		fetch("http://localhost:3000/artists")
+		fetch("http://localhost:3000/artists", {
+			headers: {
+				Authorization: `Beaver ${localStorage.getItem("token")}`
+			}
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				setDbArtists(data);
@@ -35,6 +39,9 @@ function UpdateTapeModalContent({ onTapeUpdated, tape, onClose }) {
 		// Send the POST request to the API to create new tape
 		const tapeResponse = await fetch(`http://localhost:3000/tapes/${tape.id}`, {
 			method: "PUT",
+			headers: {
+				Authorization: `Beaver ${localStorage.getItem("token")}`
+			},
 			body: formData,
 		});
 
