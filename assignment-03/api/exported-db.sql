@@ -7,6 +7,12 @@ CREATE TABLE genres (
     name VARCHAR(100) NOT NULL
 );
 
+CREATE TABLE users (
+    id       INT          PRIMARY KEY AUTO_INCREMENT,
+    email    VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE games (
     id           INT          PRIMARY KEY AUTO_INCREMENT,
     title        VARCHAR(255) NOT NULL,
